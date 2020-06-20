@@ -30,8 +30,7 @@ export async function login (sm) {
 
     if (!sm_oauth_url) throw new Error("Missing required header.");
 
-    if (res.status >= 400)
-      window.location.href = sm_oauth_url + '/'+sm+'/?aud='+AUDIANCE+'&app='+APPPATH+(API_LOCAL?'&local=true':'');
+    window.location.href = sm_oauth_url + '/'+sm+'/?aud='+AUDIANCE+'&app='+APPPATH+(API_LOCAL?'&local=true':'');
   } catch (e) {
     console.warn(e);
   }
