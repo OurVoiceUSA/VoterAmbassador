@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React from 'react';
 
-import { AUDIANCE, APPPATH, API_LOCAL, SERVER } from '../lib/consts';
+import { AUDIANCE, API_LOCAL, BASEURI, SERVER } from '../lib/consts';
 
 const Login = ({ refer }) => (
   <div>
@@ -30,7 +30,7 @@ export async function login (sm) {
 
     if (!sm_oauth_url) throw new Error("Missing required header.");
 
-    window.location.href = sm_oauth_url + '/'+sm+'/?aud='+AUDIANCE+'&app='+APPPATH+(API_LOCAL?'&local=true':'');
+    window.location.href = sm_oauth_url + '/'+sm+'/?aud='+AUDIANCE+'&app='+BASEURI.substr(1)+(API_LOCAL?'&local=true':'');
   } catch (e) {
     console.warn(e);
   }
