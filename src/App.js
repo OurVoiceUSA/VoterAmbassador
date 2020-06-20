@@ -7,7 +7,7 @@ import {
   Route,
 } from 'react-router-dom';
 
-import { BASEURI, STORAGE_KEY_JWT } from './lib/consts';
+import { BASEURI, BRANDING, STORAGE_KEY_JWT } from './lib/consts';
 import * as Routes from './routes';
 
 class App extends Component {
@@ -19,6 +19,8 @@ class App extends Component {
       loading: true,
       token: null,
       user: null,
+      onboarded: false,
+      step: 0,
     };
 
     // warn non-devs about the danger of the console
@@ -43,12 +45,15 @@ class App extends Component {
     token = await localStorage.getItem(STORAGE_KEY_JWT);
     if (token) await this.setToken(token);
 
+    // TODO: poll server for info on this person. Have they completed onboarding?
+    // example: fetch(SERVER+'/myinfo')
+
     this.setState({loading: false});
   }
 
   logout = async () => {
     await localStorage.removeItem(STORAGE_KEY_JWT);
-    this.setState({user: null, token: null});
+    this.setState({user: null, token: null, onboarded: false});
   }
 
   setToken = async (token) => {
@@ -62,13 +67,44 @@ class App extends Component {
     }
   }
 
+  nextOnboardingStep = () => {
+    const { step } = this.state;
+
+    if (BRANDING.onboarding[step+1]) {
+      this.setState({step: step+1})
+    } else {
+      this.setState({onboarded: true});
+    }
+  }
+
   render() {
-    const { loading, user} = this.state;
+    const { loading, user, onboarded, step} = this.state;
 
     if (loading) return (<div>Loading!!</div>);
     if (!user) return (<Router><Route path="/" render={() => <Routes.Login refer={this} />} /></Router>);
+    if (!onboarded) {
+      let o = BRANDING.onboarding[step];
+      if (!o) return null;
+      return (
+        <div>
+          <h1>{o.title}</h1>
+          <div>{o.body}</div>
+          <br />
+          {(o.fields)&&
+            <div>
+              Form elements for:
+              <br/>
+              {JSON.stringify(o.fields)}
+              <br/>
+              <br/>
+            </div>
+          }
+          <button onClick={() => this.nextOnboardingStep()}>Continue</button>
+        </div>
+      );
+    }
 
-    //return (<div>LOADED!!!!!!</div>);
+    // TODO: if (!approved by server) return (<div>We are reviewing your application. Please check back later!</div>)
 
     return (
       <Router>
