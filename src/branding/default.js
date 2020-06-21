@@ -1,5 +1,8 @@
 exports.branding = {
+  "name": "ENTER YOUR ORGANIZATION NAME HERE",
   "logo": "logo192.png",
+  "termsofservice": "https://YOUR-TERMS-OF-SERVICE-URL-HERE",
+  "privacypolicy": "https://YOUR-PRIVACY-POLICY-URL-HERE",
   onboarding: [
     {
       title: "Become an ambassador",
